@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reproductor MP3</title>
+  
+  <!-- Configuración PWA e iOS Safari -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="MP3 Player">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#0f172a">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>Reproductor MP3</h1>
+    <button id="btnSelectFolder" class="btn btn-primary">📁 Seleccionar Carpeta</button>
+    <input type="file" id="folderInput" webkitdirectory directory multiple accept="audio/*" style="display: none;">
+  </header>
+
+  <main class="main-content">
+    <section class="now-playing-card">
+      <div class="disc-art">
+        <div class="disc"></div>
+      </div>
+      <div class="track-info">
+        <h2 id="currentTitle">Sin canción seleccionada</h2>
+        <p id="currentArtist">Carga una carpeta para comenzar</p>
+      </div>
+
+      <audio id="audioElement"></audio>
+
+      <div class="progress-container">
+        <span id="currentTime">00:00</span>
+        <input type="range" id="progressBar" value="0" min="0" max="100">
+        <span id="durationTime">00:00</span>
+      </div>
+
+      <div class="controls">
+        <button id="btnPrev" class="btn-icon" title="Anterior">⏮</button>
+        <button id="btnPlayPause" class="btn-icon btn-play" title="Reproducir/Pausar">▶</button>
+        <button id="btnNext" class="btn-icon" title="Siguiente">⏭</button>
+        <button id="btnShuffle" class="btn-icon" title="Modo Aleatorio (Shuffle)">🔀</button>
+      </div>
+
+      <div class="volume-container">
+        <span>🔊</span>
+        <input type="range" id="volumeBar" value="80" min="0" max="100">
+      </div>
+    </section>
+
+    <section class="library-section">
+      <div class="tabs">
+        <button id="tabFiles" class="tab-btn active">Archivos Locales</button>
+        <button id="tabPlaylists" class="tab-btn">Listas de Reproducción</button>
+      </div>
+
+      <div id="viewFiles" class="tab-content active">
+        <div class="list-header">
+          <h3>Canciones Encontradas (<span id="songCount">0</span>)</h3>
+        </div>
+        <ul id="songList" class="track-list">
+          <li class="empty-msg">No has cargado ninguna carpeta aún.</li>
+        </ul>
+      </div>
+
+      <div id="viewPlaylists" class="tab-content">
+        <div class="playlist-creator">
+          <input type="text" id="newPlaylistName" placeholder="Nombre de la lista...">
+          <button id="btnCreatePlaylist" class="btn btn-secondary">Crear Lista</button>
+        </div>
+        <div id="playlistsContainer" class="playlists-container"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+
+  <!-- Registro del Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then((reg) => console.log('Service Worker registrado:', reg.scope))
+          .catch((err) => console.error('Error al registrar Service Worker:', err));
+      });
+    }
+  </script>
+</body>
+</html> 
